@@ -9,7 +9,7 @@
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix"
   },
-  "author": "",
+  "author": "Anirban Debnath",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",

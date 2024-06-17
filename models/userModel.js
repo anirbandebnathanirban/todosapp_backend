@@ -80,15 +80,20 @@ userSchema.path('userSecondaryEmails').validate({
     message: 'Email Addresses of user should be unique !!',
 });
 
-userSchema.pre("save", async (next) => {
-    if(!this.isModified("password"))return next();
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+userSchema.pre('save', function(next) {
+    if(!this.isModified('userPassword'))return next();
+    bcrypt.genSalt(10, (err, salt) => {
+        if(err)throw err;
+        bcrypt.hash(this.userPassword, salt, (err, hash) => {
+            if(err)throw err;
+            this.userPassword = hash;
+        });
+    });
     next();
-});
+})
 
 userSchema.methods.comparePassword = async (userPassword) => {
-    return await bcrypt.compare(userPassword, this.password);
+    return await bcrypt.compare(userPassword, this.userPassword);
 };
 
 module.exports = mongoose.model("user", userSchema);
