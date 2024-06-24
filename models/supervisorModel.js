@@ -16,7 +16,7 @@ const supervisorSchema = new Schema({
             required: [true, 'Last Name of supervisor is required !!'],
         }
     },
-    userPrimaryEmail: {
+    supervisorPrimaryEmail: {
         type: String,
         required: [true, 'Primary Email address of supervisor is required !!'],
         unique: [true, 'Primary Email address of supervisor should be unique !!'],
@@ -27,7 +27,7 @@ const supervisorSchema = new Schema({
             message: "Please Enter a valid Email Address !!",
         },
     },
-    userSecondaryEmails: [{
+    supervisorSecondaryEmails: [{
         type: String,
         validate: {
             validator: function(value) {
@@ -36,7 +36,7 @@ const supervisorSchema = new Schema({
             message: "Please Enter a valid Email Address !!",
         },
     }],
-    userContactNumber: [{
+    supervisorContactNumber: [{
         type: String,
         validate: {
             validator: function(value) {
@@ -47,11 +47,11 @@ const supervisorSchema = new Schema({
     }]
 });
 
-supervisorSchema.path('userSecondaryEmails').validate({
+supervisorSchema.path('supervisorSecondaryEmails').validate({
     validator: function(emails) {
         return emails.length == new Set(emails).size;
     },
-    message: 'Email Addresses of user should be unique !!',
+    message: 'Email Addresses of supervisor should be unique !!',
 });
 
 module.exports = mongoose.model('supervisor', supervisorSchema);
