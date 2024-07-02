@@ -35,7 +35,7 @@ const supervisorSchema = new Schema({
             },
             message: "Please Enter a valid Email Address !!",
         },
-    }],
+    }], 
     supervisorContactNumber: [{
         type: String,
         validate: {

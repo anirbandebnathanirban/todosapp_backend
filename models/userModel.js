@@ -62,7 +62,7 @@ const userSchema = new Schema({
             message: 'Please Enter a valid contact number !!',
         },
     }],
-    userProfilePicture: { type: 'Buffer' },
+    // userProfilePicture: { type: 'Buffer' },
     userTasks: [{
         type: Schema.Types.ObjectId,
         ref: 'task',
@@ -92,8 +92,8 @@ userSchema.pre('save', function(next) {
     next();
 })
 
-userSchema.methods.comparePassword = async (userPassword) => {
-    return await bcrypt.compare(userPassword, this.userPassword);
-};
+// userSchema.methods.comparePassword = async (userPassword) => {
+//     return await bcrypt.compare(userPassword, this.userPassword);
+// };
 
 module.exports = mongoose.model("user", userSchema);

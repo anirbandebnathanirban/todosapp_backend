@@ -15,7 +15,7 @@ const teamSchema = new Schema({
         },
         teamLastModificationTime: {
             type: Date,
-            required: [true, 'Team Last Modification Time id required !!']
+            required: [true, 'Team Last Modification Time is required !!']
         }
     },
     teamMembers: [{
@@ -25,14 +25,21 @@ const teamSchema = new Schema({
     teamLeader: {
         type: Schema.Types.ObjectId,
         ref: 'user',
+        required: [true, 'Leader of the team is required !!'],
     },
     teamTasks: [{
         type: Schema.Types.ObjectId,
         ref: 'task',
     }],
     teamMettings: [{
-        date: { type: Date },
-        notes: { type: String },
+        date: { 
+            type: Date,
+            required: [true, 'Team Metting held date is required !!'],
+        },
+        notes: { 
+            type: String,
+            required: [true, 'Some notes for team meetings is required !!'],
+        },
     }]
 }, { timestamps: true });
 

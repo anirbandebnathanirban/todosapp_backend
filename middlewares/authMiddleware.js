@@ -1,28 +1,26 @@
 const process = require('node:process');
 const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
+const {
+  TOKEN_NOT_GENERATED,
+  TOKEN_EXPIRES,
+} = require('../controllers/statusCodes');
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.header("Authorization").replace("Bearer ", "");
+  const token = req.header("Authorization");
   if (!token) {
-    res
-      .status(403)
-      .json({ message: "Token doesn't exist, authorization denied" });
+    res.status(TOKEN_NOT_GENERATED).json({ message: "Token doesn't exist, authorization denied" });
   }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      throw new Error();
+  jwt.verify(
+    token,
+    process.env.JWT_SECRET,
+    (err, decoded) => {
+      if(err){
+        res.status(TOKEN_EXPIRES).json({message: 'token expires', err});
+      }
+      req.user = decoded;
+      next();
     }
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(401).json({ 
-      message: "Unauthorised! Token Expires",
-      error: error.message
-    });
-  }
+  )
 };
 
 module.exports = authMiddleware;
