@@ -9,8 +9,10 @@ const {
     MONGODB_SERVER_ERROR_SAVE,
     SUPERVISOR_UPDATED_SUCCESSFULLY,
     MONGODB_SERVER_ERROR_FINDBYIDANDUPDATE,
-    SUPERVISOR_REMOVED_SUCCESSFULLT,
+    SUPERVISOR_REMOVED_SUCCESSFULLY,
     MONGODB_SERVER_ERROR_FINDBYIDANDDELETE,
+    FETCH_ALL_SUPERVISOR_IS_SUCCESSFUL,
+    MONGODB_SERVER_ERROR_FIND,
 } = require('./statusCodes');
 
 module.exports.getSupervisor = (req, res) => {
@@ -22,6 +24,14 @@ module.exports.getSupervisor = (req, res) => {
         res.status(SUPERVISOR_FOUND_SUCCESSFULLY).json({ supervisor });
     }).catch(error => {
         res.status(MONGODB_SERVER_ERROR_FINDBYID).json({message: 'mongoDB server error findById', error});
+    })
+}
+
+module.exports.getAllSupervisor = (req, res) => {
+    Supervisor.find().then(supervisors => {
+        res.status(FETCH_ALL_SUPERVISOR_IS_SUCCESSFUL).json({ supervisors });
+    }).catch(error => {
+        res.status(MONGODB_SERVER_ERROR_FIND).json({message: 'mongoDB server error find', error});
     })
 }
 
@@ -63,7 +73,7 @@ module.exports.removeSupervisor = (req, res) => {
         if(!deletedSupervisor){
             res.status(SUPERVISOR_NOT_FOUND).json({message: 'supervisor not found'});
         }
-        res.status(SUPERVISOR_REMOVED_SUCCESSFULLT).json({message: 'supervisor removed successfully', deletedSupervisor});
+        res.status(SUPERVISOR_REMOVED_SUCCESSFULLY).json({message: 'supervisor removed successfully', deletedSupervisor});
     }).catch(error => {
         res.status(MONGODB_SERVER_ERROR_FINDBYIDANDDELETE).json({message: 'mongoDB server error findByIdAndDelete', error});
     })

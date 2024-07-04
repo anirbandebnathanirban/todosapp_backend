@@ -16,9 +16,9 @@ app.use(cors());
 
 connectDB();
 
-app.use("/api", authRoutes);
+app.use('/api', authRoutes);
 app.use('/api', userRoutes);
-app.use("/api", taskRoutes);
+app.use('/api', taskRoutes);
 app.use('/api', teamRoutes);
 app.use('/api', supervisorRoutes);
 
