@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-const contactNoRegex = /\d{3}-\d{3}-\d{4}/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-@#$.%&*])(?=.*[a-zA-Z]).{8,16}$/;
+const contactNoRegex = /^[1-9]\d{1,14}$/;
 
 const userSchema = new Schema({
     username: {
@@ -13,12 +13,12 @@ const userSchema = new Schema({
         unique: [true, 'username should be unique !!'],
     },
     userName: {
-        firstName: {
+        userFirstName: {
             type: String,
             required: [true, 'First Name of user id required !!'],
         },
-        middleName: { type: String },
-        lastName: {
+        userMiddleName: { type: String },
+        userLastName: {
             type: String,
             required: [true, 'Last Name is required !!'],
         },
@@ -50,7 +50,7 @@ const userSchema = new Schema({
             validator: function(value) {
                 return passwordRegex.test(value);
             },
-            message: "Password must be at least 8 characters long and contain at least one letter and one number",
+            message: "At least 8 - 16 characters, must contain at least 1 uppercase letter, must contain at least 1 lowercase letter, and 1 number, Can contain any of this special characters @ $ % # * & - .",
         }
     },
     userContactNumber: [{
@@ -75,6 +75,7 @@ const userSchema = new Schema({
 
 userSchema.path('userSecondaryEmails').validate({
     validator: function(emails) {
+        if(!emails)return true;
         return emails.length == new Set(emails).size;
     },
     message: 'Email Addresses of user should be unique !!',
@@ -87,13 +88,9 @@ userSchema.pre('save', function(next) {
         bcrypt.hash(this.userPassword, salt, (err, hash) => {
             if(err)throw err;
             this.userPassword = hash;
+            next();
         });
     });
-    next();
-})
-
-// userSchema.methods.comparePassword = async (userPassword) => {
-//     return await bcrypt.compare(userPassword, this.userPassword);
-// };
+});
 
 module.exports = mongoose.model("user", userSchema);

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const contactNoRegex = /\d{3}-\d{3}-\d{4}/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const contactNoRegex = /^[1-9]\d{1,14}$/;
 
 const supervisorSchema = new Schema({
     supervisorName: {
@@ -49,6 +49,7 @@ const supervisorSchema = new Schema({
 
 supervisorSchema.path('supervisorSecondaryEmails').validate({
     validator: function(emails) {
+        if(!emails)return true;
         return emails.length == new Set(emails).size;
     },
     message: 'Email Addresses of supervisor should be unique !!',

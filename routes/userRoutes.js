@@ -6,7 +6,7 @@ const {
 
 const router = Router();
 
-router.get('/user/getuser', getUser);
+router.get('/user/getuser/:userid', getUser);
 router.get('/user/getalluser', getAllUser);
 
 module.exports = router;
